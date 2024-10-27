@@ -14,4 +14,4 @@ git add .
 git commit -m "Automated update: Processed MD files"
 
 # Push changes to the remote repository
-git push origin main
+git push origin master

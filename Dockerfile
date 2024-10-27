@@ -22,7 +22,7 @@ COPY data /app/data
 RUN chmod +x git_push.sh run.sh
 
 # Create required directories, except the existing 'data' folder
-RUN mkdir -p /app/excel_files
+RUN mkdir -p /app/excel_files /app/output
 
 # Use the run.sh script as the container's entrypoint
 ENTRYPOINT ["sh", "./run.sh"]

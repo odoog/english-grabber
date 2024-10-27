@@ -1,17 +1,45 @@
 #!/bin/sh
 
+# ---------------------------- Prepare output repository ------------------------------------
+
 # Define folder paths
+APP_FOLDER="/app/"
 DATA_FOLDER="/app/data"
 EXCEL_FOLDER="/app/excel_files"
 OUTPUT_FOLDER="/app/output"
 
-# Use the GITHUB_SYNC_REPOSITORY environment variable for cloning
-git clone $GITHUB_SYNC_REPOSITORY $OUTPUT_FOLDER
+if [ ! -d "$OUTPUT_FOLDER" ]; then
+    mkdir -p "$OUTPUT_FOLDER"
+    echo "Created output directory: $OUTPUT_FOLDER"
+fi
 
-# Infinite loop to run the tasks every 10 minutes
+cd "$OUTPUT_FOLDER" || exit 1
+
+# Initialize a new Git repository
+if [ ! -d ".git" ]; then
+    git init
+    echo "Initialized a new Git repository in $OUTPUT_FOLDER"
+fi
+
+# Check if the remote is already added
+if ! git remote get-url origin >/dev/null 2>&1; then
+    git remote add origin "$GITHUB_SYNC_REPOSITORY"
+    echo "Added remote repository: $GITHUB_SYNC_REPOSITORY"
+fi
+
+# ---------------------------- Run endless files update and synchronization ------------------------------------
+
+# Infinite loop to run the tasks every 60 minutes
 while true; do
     echo "Starting download and processing tasks..."
-    
+
+    # Update output repository from git
+    cd "$OUTPUT_FOLDER" || exit 1
+    git pull origin main
+
+    # Work in app folder
+    cd "$APP_FOLDER" || exit 1
+
     # Run the download script
     python download_excel.py $DATA_FOLDER/file_ids.txt $EXCEL_FOLDER
     if [ $? -ne 0 ]; then
