@@ -6,7 +6,7 @@ EXCEL_FOLDER="/app/excel_files"
 OUTPUT_FOLDER="/app/output"
 
 # Use the GITHUB_SYNC_REPOSITORY environment variable for cloning
-git clone $GITHUB_SYNC_REPOSITORY OUTPUT_FOLDER
+git clone $GITHUB_SYNC_REPOSITORY $OUTPUT_FOLDER
 
 # Infinite loop to run the tasks every 10 minutes
 while true; do
