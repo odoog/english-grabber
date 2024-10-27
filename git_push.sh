@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Change to the output directory
-cd /app/output/md_files
+cd /app/output
 
 # Configure Git
 git config --global user.name "odoog"

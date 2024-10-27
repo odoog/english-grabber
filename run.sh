@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Use the GITHUB_TOKEN environment variable for cloning
-git clone $GITHUB_SYNC_REPOSITORY /app/output
-
 # Define folder paths
 DATA_FOLDER="/app/data"
 EXCEL_FOLDER="/app/excel_files"
 OUTPUT_FOLDER="/app/output"
+
+# Use the GITHUB_SYNC_REPOSITORY environment variable for cloning
+git clone $GITHUB_SYNC_REPOSITORY OUTPUT_FOLDER
 
 # Infinite loop to run the tasks every 10 minutes
 while true; do
