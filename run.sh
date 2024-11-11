@@ -27,42 +27,34 @@ if ! git remote get-url origin >/dev/null 2>&1; then
     echo "Added remote repository: $GITHUB_SYNC_REPOSITORY"
 fi
 
-# ---------------------------- Run endless files update and synchronization ------------------------------------
+# ---------------------------- Run download and synchronization ------------------------------------
 
-# Infinite loop to run the tasks every 60 minutes
-while true; do
-    echo "Starting download and processing tasks..."
+echo "Starting download and processing tasks..."
 
-    # Update output repository from git
-    cd "$OUTPUT_FOLDER" || exit 1
-    git pull origin main
+# Update output repository from git
+cd "$OUTPUT_FOLDER" || exit 1
+git pull origin main
 
-    # Work in app folder
-    cd "$APP_FOLDER" || exit 1
+# Work in app folder
+cd "$APP_FOLDER" || exit 1
 
-    # Run the download script
-    python download_excel.py $DATA_FOLDER/file_ids.txt $EXCEL_FOLDER
-    if [ $? -ne 0 ]; then
-        echo "Error running download_excel.py"
-        sleep 600
-        continue
-    fi
+# Run the download script
+python download_excel.py $DATA_FOLDER/file_ids.txt $EXCEL_FOLDER
+if [ $? -ne 0 ]; then
+    echo "Error running download_excel.py"
+    exit 1
+fi
 
-    # Run the Excel to MD conversion script, outputting directly to the Git-synced folder
-    python excel_to_md.py $EXCEL_FOLDER $OUTPUT_FOLDER
-    if [ $? -ne 0 ]; then
-        echo "Error running excel_to_md.py"
-        sleep 600
-        continue
-    fi
+# Run the Excel to MD conversion script, outputting directly to the Git-synced folder
+python excel_to_md.py $EXCEL_FOLDER $OUTPUT_FOLDER
+if [ $? -ne 0 ]; then
+    echo "Error running excel_to_md.py"
+    exit 1
+fi
 
-    # Push to GitHub
-    ./git_push.sh
-    if [ $? -ne 0 ]; then
-        echo "Error running git_push.sh"
-    fi
-
-    # Wait 10 minutes before running the tasks again
-    echo "Waiting for 60 minutes..."
-    sleep 600
-done
+# Push to GitHub
+./git_push.sh
+if [ $? -ne 0 ]; then
+    echo "Error running git_push.sh"
+    exit 1
+fi
