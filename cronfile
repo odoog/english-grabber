@@ -1,1 +1,2 @@
-0 * * * * root /app/run.sh >> /var/log/cron.log 2>&1
+# This cron job runs the script every hour
+0 * * * * root /bin/bash /app/run.sh >> /var/log/cron.log 2>&1
