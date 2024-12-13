@@ -1,0 +1,1 @@
+docker run --rm -e GITHUB_SYNC_REPOSITORY=git@github.com:odoog/obsidian-sync.git -v $(pwd)/sync-folder:/app/output -v ~/.ssh:/root/.ssh odoog/english-grabber:latest
